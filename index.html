@@ -2,517 +2,510 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Universal Downloader</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universal Downloader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
 
-    body {
-      background: #0f0f0f;
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      position: relative;
-    }
+body{
+background:#090909;
+color:white;
+height:100vh;
+overflow:hidden;
+display:flex;
+align-items:center;
+justify-content:center;
+position:relative;
+}
 
-    body::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top, rgba(255,255,255,0.05), transparent 60%);
-      pointer-events: none;
-    }
+body::before{
+content:"";
+position:absolute;
+inset:0;
+background:
+radial-gradient(circle at top,rgba(255,255,255,.06),transparent 35%),
+radial-gradient(circle at bottom right,rgba(255,255,255,.03),transparent 30%);
+filter:blur(20px);
+}
 
-    .container {
-      width: 90%;
-      max-width: 900px;
-      text-align: center;
-      z-index: 2;
-    }
+.grid{
+position:absolute;
+inset:0;
+background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+background-size:60px 60px;
+mask-image:radial-gradient(circle at center,black,transparent 90%);
+}
 
-    .title {
-      font-size: 56px;
-      font-weight: bold;
-      color: #f2f2f2;
-      margin-bottom: 40px;
-      text-shadow: 0 0 12px rgba(255,255,255,0.2);
-      letter-spacing: 1px;
-    }
+.container{
+width:min(900px,92vw);
+position:relative;
+z-index:10;
+animation:fadeUp .8s ease;
+}
 
-    .search-box {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      background: #1b1b1b;
-      border: 1px solid #2c2c2c;
-      border-radius: 22px;
-      padding: 12px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.4);
-    }
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(25px)}
+to{opacity:1;transform:translateY(0)}
+}
 
-    .search-box input {
-      flex: 1;
-      background: #242424;
-      border: none;
-      outline: none;
-      padding: 20px;
-      border-radius: 18px;
-      color: white;
-      font-size: 18px;
-      transition: 0.25s;
-    }
+.title{
+font-size:72px;
+font-weight:800;
+text-align:center;
+letter-spacing:-3px;
+margin-bottom:18px;
+background:linear-gradient(to bottom,#fff,#7f7f7f);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+text-shadow:0 0 40px rgba(255,255,255,.12);
+}
 
-    .search-box input:focus {
-      background: #2a2a2a;
-    }
+.subtitle{
+text-align:center;
+color:#7f7f7f;
+font-size:15px;
+margin-bottom:40px;
+}
 
-    .search-box input::placeholder {
-      color: #777;
-    }
+.search-wrap{
+background:rgba(18,18,18,.95);
+border:1px solid rgba(255,255,255,.08);
+backdrop-filter:blur(20px);
+border-radius:30px;
+padding:14px;
+display:flex;
+align-items:center;
+gap:14px;
+box-shadow:
+0 10px 40px rgba(0,0,0,.5),
+inset 0 1px 0 rgba(255,255,255,.05);
+transition:.35s;
+}
 
-    .search-btn {
-      width: 70px;
-      height: 70px;
-      border-radius: 20px;
-      border: none;
-      background: #2d2d2d;
-      color: white;
-      font-size: 28px;
-      cursor: pointer;
-      margin-left: 12px;
-      transition: 0.2s ease;
-    }
+.search-wrap:hover{
+transform:translateY(-2px);
+border-color:rgba(255,255,255,.15);
+}
 
-    .search-btn:hover {
-      background: #3a3a3a;
-      transform: scale(1.03);
-    }
+.search-wrap input{
+flex:1;
+height:72px;
+border:none;
+outline:none;
+background:#151515;
+border-radius:22px;
+padding:0 28px;
+font-size:18px;
+color:white;
+font-weight:500;
+box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
+transition:.25s;
+}
 
-    .credit {
-      margin-top: 22px;
-      color: #d0d0d0;
-      text-shadow: 0 0 8px rgba(255,255,255,0.15);
-      font-size: 15px;
-    }
+.search-wrap input:focus{
+background:#191919;
+box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 0 25px rgba(255,255,255,.05);
+}
 
-    .supported {
-      margin-top: 20px;
-      color: #9d9d9d;
-      font-size: 14px;
-      line-height: 2;
-      list-style: none;
-    }
+.search-wrap input::placeholder{
+color:#666;
+}
 
-    .popup {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-      backdrop-filter: blur(10px);
-    }
+.search-btn{
+width:72px;
+height:72px;
+border:none;
+border-radius:22px;
+background:linear-gradient(180deg,#2b2b2b,#1a1a1a);
+color:white;
+font-size:28px;
+cursor:pointer;
+transition:.25s;
+box-shadow:
+inset 0 1px 0 rgba(255,255,255,.08),
+0 8px 25px rgba(0,0,0,.45);
+}
 
-    .popup-content {
-      width: 95%;
-      max-width: 950px;
-      background: #181818;
-      border: 1px solid #303030;
-      border-radius: 30px;
-      padding: 35px;
-      max-height: 90vh;
-      overflow-y: auto;
-      animation: popupAnim 0.25s ease;
-    }
+.search-btn:hover{
+transform:scale(1.05) rotate(-4deg);
+}
 
-    @keyframes popupAnim {
-      from {
-        transform: translateY(20px) scale(0.98);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0px) scale(1);
-        opacity: 1;
-      }
-    }
+.made{
+margin-top:22px;
+text-align:center;
+font-size:14px;
+color:#9f9f9f;
+text-shadow:0 0 12px rgba(255,255,255,.08);
+}
 
-    .popup-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-    }
+.platforms{
+margin-top:22px;
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:12px;
+}
 
-    .popup-title {
-      font-size: 34px;
-      text-shadow: 0 0 10px rgba(255,255,255,0.1);
-    }
+.platform{
+padding:10px 16px;
+background:rgba(255,255,255,.04);
+border:1px solid rgba(255,255,255,.06);
+border-radius:999px;
+font-size:13px;
+color:#cfcfcf;
+transition:.25s;
+}
 
-    .close-btn {
-      background: #282828;
-      border: none;
-      color: white;
-      width: 50px;
-      height: 50px;
-      border-radius: 14px;
-      font-size: 20px;
-      cursor: pointer;
-    }
+.platform:hover{
+background:rgba(255,255,255,.08);
+transform:translateY(-2px);
+}
 
-    .preview {
-      width: 100%;
-      height: 280px;
-      border-radius: 24px;
-      object-fit: cover;
-      border: 1px solid #2f2f2f;
-      margin-bottom: 25px;
-    }
+.popup{
+position:fixed;
+inset:0;
+display:none;
+align-items:center;
+justify-content:center;
+background:rgba(0,0,0,.7);
+backdrop-filter:blur(18px);
+z-index:999;
+padding:20px;
+}
 
-    .section {
-      margin-top: 30px;
-      text-align: left;
-    }
+.modal{
+width:min(1100px,100%);
+height:min(850px,95vh);
+overflow:auto;
+background:#101010;
+border:1px solid rgba(255,255,255,.08);
+border-radius:36px;
+padding:28px;
+box-shadow:0 40px 120px rgba(0,0,0,.7);
+animation:modal .35s ease;
+}
 
-    .section h2 {
-      font-size: 22px;
-      margin-bottom: 18px;
-      color: #f1f1f1;
-    }
+@keyframes modal{
+from{opacity:0;transform:translateY(30px) scale(.97)}
+to{opacity:1;transform:translateY(0) scale(1)}
+}
 
-    .format-buttons {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:24px;
+}
 
-    .format-btn {
-      background: #242424;
-      border: 1px solid #3a3a3a;
-      color: white;
-      padding: 15px 30px;
-      border-radius: 16px;
-      cursor: pointer;
-      transition: 0.2s;
-      font-size: 16px;
-    }
+.top h2{
+font-size:36px;
+letter-spacing:-1px;
+}
 
-    .format-btn.active {
-      background: #e5e5e5;
-      color: black;
-    }
+.close{
+width:52px;
+height:52px;
+border-radius:18px;
+border:none;
+background:#1b1b1b;
+color:white;
+font-size:20px;
+cursor:pointer;
+transition:.25s;
+}
 
-    .slider-group {
-      margin-bottom: 26px;
-    }
+.close:hover{
+transform:rotate(90deg);
+background:#232323;
+}
 
-    .slider-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      gap: 20px;
-    }
+.preview{
+height:320px;
+width:100%;
+object-fit:cover;
+border-radius:28px;
+border:1px solid rgba(255,255,255,.08);
+margin-bottom:26px;
+}
 
-    .slider-header label {
-      font-size: 15px;
-      color: #e2e2e2;
-    }
+.section{
+margin-top:30px;
+background:#141414;
+border:1px solid rgba(255,255,255,.05);
+border-radius:28px;
+padding:24px;
+}
 
-    .value-box {
-      width: 90px;
-      background: #242424;
-      border: 1px solid #3b3b3b;
-      border-radius: 12px;
-      color: white;
-      padding: 10px;
-      text-align: center;
-      outline: none;
-    }
+.section h3{
+font-size:22px;
+margin-bottom:20px;
+}
 
-    .slider {
-      width: 100%;
-      appearance: none;
-      height: 10px;
-      border-radius: 999px;
-      background: #2e2e2e;
-      outline: none;
-    }
+.formats{
+display:flex;
+gap:14px;
+}
 
-    .slider::-webkit-slider-thumb {
-      appearance: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: white;
-      cursor: pointer;
-      box-shadow: 0 0 15px rgba(255,255,255,0.25);
-    }
+.format{
+flex:1;
+height:70px;
+border-radius:22px;
+border:1px solid rgba(255,255,255,.08);
+background:#191919;
+color:white;
+font-size:18px;
+font-weight:700;
+cursor:pointer;
+transition:.25s;
+}
 
-    .effects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 15px;
-      margin-top: 15px;
-    }
+.format.active{
+background:white;
+color:black;
+box-shadow:0 0 35px rgba(255,255,255,.12);
+}
 
-    .effect-card {
-      background: #232323;
-      border: 1px solid #383838;
-      border-radius: 18px;
-      padding: 18px;
-      transition: 0.2s;
-    }
+.slider-box{
+margin-bottom:28px;
+}
 
-    .effect-card:hover {
-      border-color: #555;
-    }
+.slider-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:14px;
+}
 
-    .effect-card h3 {
-      margin-bottom: 10px;
-      font-size: 16px;
-    }
+.slider-top span{
+font-size:15px;
+color:#d7d7d7;
+}
 
-    .effect-card input {
-      width: 100%;
-    }
+.number{
+width:90px;
+height:42px;
+background:#1d1d1d;
+border:1px solid rgba(255,255,255,.08);
+border-radius:12px;
+color:white;
+text-align:center;
+}
 
-    .export-btn {
-      width: 100%;
-      margin-top: 35px;
-      padding: 20px;
-      border: none;
-      border-radius: 20px;
-      background: white;
-      color: black;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+.range{
+width:100%;
+height:12px;
+appearance:none;
+border-radius:999px;
+background:#232323;
+overflow:hidden;
+}
 
-    .export-btn:hover {
-      transform: scale(1.01);
-    }
+.range::-webkit-slider-thumb{
+appearance:none;
+width:26px;
+height:26px;
+border-radius:50%;
+background:white;
+box-shadow:0 0 25px rgba(255,255,255,.4);
+cursor:pointer;
+}
 
-    .status {
-      margin-top: 20px;
-      text-align: center;
-      color: #cfcfcf;
-      display: none;
-    }
+.effects{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:16px;
+}
 
-    @media (max-width: 700px) {
-      .title {
-        font-size: 38px;
-      }
+.effect{
+background:#191919;
+border:1px solid rgba(255,255,255,.06);
+border-radius:22px;
+padding:18px;
+transition:.25s;
+}
 
-      .popup-content {
-        padding: 20px;
-      }
+.effect:hover{
+transform:translateY(-3px);
+border-color:rgba(255,255,255,.15);
+}
 
-      .preview {
-        height: 180px;
-      }
-    }
-  </style>
+.effect h4{
+margin-bottom:14px;
+}
+
+.export{
+width:100%;
+height:78px;
+margin-top:28px;
+border:none;
+border-radius:24px;
+background:linear-gradient(180deg,#ffffff,#d7d7d7);
+font-size:18px;
+font-weight:800;
+letter-spacing:.5px;
+cursor:pointer;
+transition:.25s;
+}
+
+.export:hover{
+transform:translateY(-2px);
+box-shadow:0 20px 50px rgba(255,255,255,.1);
+}
+
+.status{
+margin-top:18px;
+text-align:center;
+color:#9f9f9f;
+display:none;
+}
+
+::-webkit-scrollbar{
+width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+background:#2a2a2a;
+border-radius:999px;
+}
+</style>
 </head>
 <body>
+<div class="grid"></div>
 
-  <div class="container">
-    <div class="title">Universal Downloader</div>
+<div class="container">
+<div class="title">Universal Downloader</div>
+<div class="subtitle">Fast universal media exporting with advanced audio processing.</div>
 
-    <div class="search-box">
-      <input id="urlInput" type="text" placeholder="Enter Your Link...">
-      <button class="search-btn" onclick="openPopup()">↗</button>
-    </div>
+<div class="search-wrap">
+<input id="url" placeholder="Enter Your Link...">
+<button class="search-btn" onclick="openPopup()">↗</button>
+</div>
 
-    <div class="credit">Made by leet61</div>
+<div class="made">Made by leet61</div>
 
-    <ul class="supported">
-      <li>• https://music.youtube.com/</li>
-      <li>• https://youtube.com/</li>
-      <li>• https://open.spotify.com/</li>
-      <li>• https://soundcloud.com/</li>
-      <li>• https://music.apple.com/</li>
-      <li>• https://music.amazon.co.uk/</li>
-    </ul>
-  </div>
+<div class="platforms">
+<div class="platform">YouTube</div>
+<div class="platform">YouTube Music</div>
+<div class="platform">Spotify</div>
+<div class="platform">SoundCloud</div>
+<div class="platform">Apple Music</div>
+<div class="platform">Amazon Music</div>
+</div>
+</div>
 
-  <div class="popup" id="popup">
-    <div class="popup-content">
+<div class="popup" id="popup">
+<div class="modal">
+<div class="top">
+<h2>Export Media</h2>
+<button class="close" onclick="closePopup()">✕</button>
+</div>
 
-      <div class="popup-top">
-        <div class="popup-title">Export Media</div>
-        <button class="close-btn" onclick="closePopup()">✕</button>
-      </div>
+<img class="preview" src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1600&auto=format&fit=crop">
 
-      <img class="preview" id="previewImage" src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=1600&auto=format&fit=crop" alt="preview">
+<div class="section">
+<h3>File Format</h3>
+<div class="formats">
+<button class="format active" onclick="pick(this)">MP4 VIDEO</button>
+<button class="format" onclick="pick(this)">MP3 AUDIO</button>
+</div>
+</div>
 
-      <div class="section">
-        <h2>File Format</h2>
+<div class="section">
+<h3>Audio / Video Controls</h3>
 
-        <div class="format-buttons">
-          <button class="format-btn active" onclick="selectFormat(this)">MP4</button>
-          <button class="format-btn" onclick="selectFormat(this)">MP3</button>
-        </div>
-      </div>
+<div class="slider-box">
+<div class="slider-top">
+<span>Playback Speed</span>
+<input class="number" id="speedNum" type="number" value="1.0" step="0.1">
+</div>
+<input class="range" id="speed" type="range" min="0.1" max="10" step="0.1" value="1">
+</div>
 
-      <div class="section">
-        <h2>Additional Features</h2>
+<div class="slider-box">
+<div class="slider-top">
+<span>Volume Boost</span>
+<input class="number" id="volNum" type="number" value="100">
+</div>
+<input class="range" id="vol" type="range" min="1" max="200" value="100">
+</div>
 
-        <div class="slider-group">
-          <div class="slider-header">
-            <label>Playback Speed (0.1x - 10x)</label>
-            <input class="value-box" id="speedValue" type="number" step="0.1" min="0.1" max="10" value="1.0">
-          </div>
-          <input class="slider" id="speedSlider" type="range" min="0.1" max="10" step="0.1" value="1.0">
-        </div>
+<div class="slider-box">
+<div class="slider-top">
+<span>Bass Enhancement</span>
+<input class="number" id="bassNum" type="number" value="1" step="0.1">
+</div>
+<input class="range" id="bass" type="range" min="0.1" max="10" step="0.1" value="1">
+</div>
+</div>
 
-        <div class="slider-group">
-          <div class="slider-header">
-            <label>Volume (1% - 200%)</label>
-            <input class="value-box" id="volumeValue" type="number" min="1" max="200" value="100">
-          </div>
-          <input class="slider" id="volumeSlider" type="range" min="1" max="200" step="1" value="100">
-        </div>
+<div class="section">
+<h3>Effects</h3>
+<div class="effects">
+<div class="effect"><h4>Robot Voice</h4><input class="range" type="range"></div>
+<div class="effect"><h4>Echo</h4><input class="range" type="range"></div>
+<div class="effect"><h4>Helium</h4><input class="range" type="range"></div>
+<div class="effect"><h4>Nightcore</h4><input class="range" type="range"></div>
+<div class="effect"><h4>Deep Voice</h4><input class="range" type="range"></div>
+<div class="effect"><h4>Reverb</h4><input class="range" type="range"></div>
+</div>
+</div>
 
-        <div class="slider-group">
-          <div class="slider-header">
-            <label>Bass Boost (0.1 - 10)</label>
-            <input class="value-box" id="bassValue" type="number" min="0.1" max="10" step="0.1" value="1">
-          </div>
-          <input class="slider" id="bassSlider" type="range" min="0.1" max="10" step="0.1" value="1">
-        </div>
-      </div>
+<button class="export" onclick="exportFile()">EXPORT & DOWNLOAD</button>
+<div class="status" id="status">Preparing export...</div>
+</div>
+</div>
 
-      <div class="section">
-        <h2>Effects</h2>
+<script>
+const popup=document.getElementById('popup')
 
-        <div class="effects-grid">
-          <div class="effect-card">
-            <h3>Robot Voice</h3>
-            <input type="range" min="0" max="100" value="0">
-          </div>
+function openPopup(){
+const value=document.getElementById('url').value.trim()
+if(!value)return
+popup.style.display='flex'
+}
 
-          <div class="effect-card">
-            <h3>Echo</h3>
-            <input type="range" min="0" max="100" value="0">
-          </div>
+function closePopup(){
+popup.style.display='none'
+}
 
-          <div class="effect-card">
-            <h3>Helium</h3>
-            <input type="range" min="0" max="100" value="0">
-          </div>
+function pick(btn){
+document.querySelectorAll('.format').forEach(b=>b.classList.remove('active'))
+btn.classList.add('active')
+}
 
-          <div class="effect-card">
-            <h3>Nightcore</h3>
-            <input type="range" min="0" max="100" value="0">
-          </div>
+function sync(slider,input){
+slider.oninput=()=>input.value=slider.value
+input.oninput=()=>slider.value=input.value
+}
 
-          <div class="effect-card">
-            <h3>Deep Voice</h3>
-            <input type="range" min="0" max="100" value="0">
-          </div>
+sync(speed,speedNum)
+sync(vol,volNum)
+sync(bass,bassNum)
 
-          <div class="effect-card">
-            <h3>Reverb</h3>
-            <input type="range" min="0" max="100" value="0">
-          </div>
-        </div>
-      </div>
+function exportFile(){
+const status=document.getElementById('status')
+status.style.display='block'
 
-      <button class="export-btn" onclick="startExport()">Export & Download</button>
+status.innerText='Fetching media...'
+setTimeout(()=>status.innerText='Applying effects...',1200)
+setTimeout(()=>status.innerText='Rendering export...',2400)
 
-      <div class="status" id="statusText">
-        Preparing download...
-      </div>
-
-    </div>
-  </div>
-
-  <script>
-    const popup = document.getElementById('popup');
-
-    function openPopup() {
-      const input = document.getElementById('urlInput').value.trim();
-
-      if (!input) {
-        alert('Please enter a supported link.');
-        return;
-      }
-
-      popup.style.display = 'flex';
-    }
-
-    function closePopup() {
-      popup.style.display = 'none';
-    }
-
-    function selectFormat(button) {
-      document.querySelectorAll('.format-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-
-      button.classList.add('active');
-    }
-
-    function bindSlider(sliderId, valueId) {
-      const slider = document.getElementById(sliderId);
-      const value = document.getElementById(valueId);
-
-      slider.addEventListener('input', () => {
-        value.value = slider.value;
-      });
-
-      value.addEventListener('input', () => {
-        slider.value = value.value;
-      });
-    }
-
-    bindSlider('speedSlider', 'speedValue');
-    bindSlider('volumeSlider', 'volumeValue');
-    bindSlider('bassSlider', 'bassValue');
-
-    function startExport() {
-      const status = document.getElementById('statusText');
-      status.style.display = 'block';
-      status.innerText = 'Preparing download...';
-
-      setTimeout(() => {
-        status.innerText = 'Applying effects and rendering media...';
-      }, 1200);
-
-      setTimeout(() => {
-        status.innerText = 'Creating export file...';
-      }, 2400);
-
-      setTimeout(() => {
-        status.innerText = 'Download ready.';
-
-        const blob = new Blob(['Universal Downloader Export'], { type: 'text/plain' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'download.txt';
-        a.click();
-
-        closePopup();
-
-        status.style.display = 'none';
-      }, 4200);
-    }
-  </script>
-
+setTimeout(()=>{
+status.innerText='Download complete.'
+closePopup()
+status.style.display='none'
+},4200)
+}
+</script>
 </body>
 </html>
 ```
